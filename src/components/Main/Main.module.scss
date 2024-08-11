@@ -1,0 +1,76 @@
+@mixin centerTitle {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.main {
+    display: flex;
+    justify-content: space-between;
+
+    height: calc(100vh - 80px); ///80px width of upper component
+
+ 
+
+    h1 {
+       @include centerTitle;
+
+        font-size: 46px;
+        font-weight: 400;
+        width: 416px;
+    }
+
+    h2 {
+        font-size: 48px;
+        font-weight: 400;
+    }
+
+    &__table {
+        width: 100%;
+        padding: 24px 16px 14px 32px;
+
+        table {
+            margin-top: 24px;
+            width: 95%;
+
+            th {
+                font-size: 14px;
+                font-weight: 500;
+                width: 182px;
+                height: 56px;
+                text-align: left;
+                padding: 16px;
+            }
+
+            td {
+                font-size: 14px;
+                font-weight: 400;
+                width: 182px;
+                height: 52px;
+                padding: 16px;
+            }
+
+            tr {
+                border-bottom: rgb(213, 208, 208) 1px solid;
+            }
+        }
+    }
+
+    &__result {
+        position: relative;
+        height: 100%;
+        width: 30%;
+        padding: 24px;
+        background-color: #F2F2F2;
+
+        h3 {
+            font-size: 14px;
+            font-weight: 400;
+
+            @include centerTitle;
+        }
+    }
+    
+}
+
