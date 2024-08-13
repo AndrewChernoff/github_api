@@ -1,10 +1,36 @@
-import { useAppSelector } from "../../hooks/reduxHooks";
-import { repos } from "../../redux/features/reposSlice";
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
+import { fetchRepos, repos } from "../../redux/features/reposSlice";
 import { convertData } from "../../utils/convertData";
+import TablePagination from '@mui/material/TablePagination';
+import { ChangeEvent, MouseEvent, useState } from "react";
 import s from "./Main.module.scss";
 
-export const Main = () => {
-  const items = useAppSelector(repos);
+type PropsType = {
+  title: string
+}
+
+export const Main = ({title}: PropsType) => {
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const { items, totalCount } = useAppSelector(repos);
+  const dispatch = useAppDispatch()
+
+
+  const handleChangePage = (
+    _event: MouseEvent<HTMLButtonElement> | null,
+    newPage: number,
+  ) => {
+    setPage(newPage);
+    dispatch(fetchRepos({name: title, order: "desc", sortParam: 'stars', page: newPage + 1, portion: rowsPerPage})) ////added
+  };
+
+  const handleChangeRowsPerPage = (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    setRowsPerPage(parseInt(event.target.value/* , 10 */));
+    dispatch(fetchRepos({name: title, order: "desc", sortParam: 'stars', page: page, portion: +event.target.value})) ////added
+    setPage(0);
+  };
 
   return (
     <div className={s.main}>
@@ -26,8 +52,8 @@ export const Main = () => {
               </thead>
               <tbody>
                 {items.map((el) => (
-                  <tr>
-                    <td scope="row">{el.name}</td>
+                  <tr key={el.id}>
+                    <td>{el.name}</td>
                     <td>{el.language}</td>
                     <td>{el.forks_count}</td>
                     <td>{el.stargazers_count}</td>
@@ -36,6 +62,15 @@ export const Main = () => {
                 ))}
               </tbody>
             </table>
+
+            <TablePagination
+            component="div"
+            count={Math.round(totalCount / rowsPerPage)}
+            page={page}
+            onPageChange={handleChangePage}
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
           </div>
           <div className={s.main__result}>
             <h3>Выберите репозитарий</h3>

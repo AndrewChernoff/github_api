@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice, PayloadAction, Slice } from '@reduxjs/toolkit'
 import { RootState } from '../store'
 import { api, ParamsType } from '../../api/api'
 import { RepositoryType, ReposResponseType } from '../../types/types'
@@ -7,7 +7,7 @@ import { RepositoryType, ReposResponseType } from '../../types/types'
 export interface State {
     errorMessage: string | null
     status: 'idle' | 'pending' | 'error'
-    total_count: number
+    totalCount: number
     items: RepositoryType[] | null
 }
 
@@ -15,11 +15,11 @@ export interface State {
 const initialState: State = {
     errorMessage: null,
     status: 'idle',
-    total_count: 0,
+    totalCount: 0,
     items: null
 }
 
-export const reposSlice = createSlice({
+export const reposSlice: Slice<State> = createSlice({
   name: 'repos',
   initialState,
   reducers: {
@@ -32,7 +32,7 @@ export const reposSlice = createSlice({
       })
       .addCase(fetchRepos.fulfilled, (state, action: PayloadAction<ReposResponseType>) => {
         state.items = action.payload.items
-        state.total_count = action.payload.total_count
+        state.totalCount = action.payload.total_count
         state.status = 'idle' 
       })
   }
@@ -42,13 +42,14 @@ export const reposSlice = createSlice({
 export const fetchRepos = createAsyncThunk<
   ReposResponseType,
   ParamsType
->('repos/fetchRepos', async ({name, order, sortParam, page, portion}, __) => {
+// eslint-disable-next-line no-empty-pattern
+>('repos/fetchRepos', async ({name, order, sortParam, page, portion}, {}) => {
   const res = await api.getRepos({name, order, sortParam, page, portion})
   return res.data
 })
 
 /* export const { increment, decrement, incrementByAmount } = reposSlice.actions */
 
-export const repos = (state: RootState) => state.repos.items
+export const repos = (state: RootState) => state.repos
 
 export default reposSlice.reducer

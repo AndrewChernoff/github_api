@@ -1,17 +1,19 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent } from "react";
 import Button from '@mui/material/Button';
 import { fetchRepos } from "../../redux/features/reposSlice";
 import { useAppDispatch } from "../../hooks/reduxHooks";
 import s from "./TopBar.module.scss";
 
-export const TopBar = () => {
-  const [title, setTitle] = useState("");
+type PropsType = {
+  title: string
+  onTitleChange: (value: ChangeEvent<HTMLInputElement>) => void
+}
+
+export const TopBar = ({title, onTitleChange}: PropsType) => {
   const dispatch = useAppDispatch()
 
-  const onTitleChange = (e: ChangeEvent<HTMLInputElement>) => setTitle(e.currentTarget.value);
-
   const findRepos = () => {
-    dispatch(fetchRepos({name: title, order: "desc", sortParam: 'stars', page: 1, portion: 4}))
+    dispatch(fetchRepos({name: title, order: "desc", sortParam: 'stars', page: 1, portion: 10}))
        
 }
 
