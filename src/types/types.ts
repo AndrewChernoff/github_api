@@ -31,6 +31,10 @@ export type OwnerType = {
     type: string;
     site_admin: boolean;
   }
+
+  type LicenseRepoType = {
+    [key: string]: string
+  }
   
 export type RepositoryType = {
     id: number;
@@ -102,7 +106,7 @@ export type RepositoryType = {
     archived: boolean;
     disabled: boolean;
     open_issues_count: number;
-    license: string | null;
+    license: LicenseRepoType | null;
     allow_forking: boolean;
     is_template: boolean;
     web_commit_signoff_required: boolean;

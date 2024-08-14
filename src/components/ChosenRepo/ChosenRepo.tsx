@@ -6,7 +6,7 @@ type PropsType = {
 };
 
 export const ChosenRepo = ({ repo }: PropsType) => {
-  console.log(repo);
+  console.log(repo?.license);
 
   return (
     <div className={s.repo}>
@@ -18,13 +18,18 @@ export const ChosenRepo = ({ repo }: PropsType) => {
 
           <div className={s.repo__info}>
                 <div className={s.repo__info_main}>
-                    <div>{repo.language}</div>
-                    <div>{repo.stargazers_count}</div>
+                    <div className={s.repo__info_lang}>{repo.language}</div>
+                    <div className={s.repo__info_stars}>{repo.size}</div>
                 </div>
-                <div className={s.repo__info_notmain}>
-                    <div>{repo.license}</div>
-                    <div>{repo.stargazers_count}</div>
+                <div className={s.repo__info_secondary}>
+                    <div className={s.repo__info_item}>{repo.private ? 'private' : 'public'}</div>
+                    <div className={s.repo__info_item}>forks: {repo.forks_count}</div>
                 </div>
+
+               {/*  <div>{repo.homepage}</div> */}
+
+
+                <div>{repo?.license?.name} license</div>
           </div>
         </div>
       )}

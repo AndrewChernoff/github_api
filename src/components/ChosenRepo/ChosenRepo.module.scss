@@ -1,3 +1,17 @@
+@mixin item($color, $background, $height) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: $color;
+    font-size: 13px;
+    font-weight: 400;
+    background-color: $background;
+    border-radius: 100px;
+    min-width: 62px;
+    //max-width: 70px;
+    min-height: $height;
+}
+
 .repo {
     position: relative;
     height: 100%;
@@ -15,10 +29,45 @@
     }
 
     &__content {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+
         h3 {
             font-size: 32px;
             font-weight: 400;
             color: rgba(0, 0, 0, 0.87);
+        }
+    }
+
+    &__info {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+
+        &_main {
+            display: flex;
+            justify-content: space-between;
+        }
+        &_lang {
+            @include item($background: rgba(33, 150, 243, 1), $color: #fff, $height: 32px);
+          
+        }
+
+        &_stars {
+            font-size: 14px;
+            font-weight: 400;
+            color: rgba(0, 0, 0, 0.87)
+        }
+
+        &_secondary {
+            display: flex;
+            flex-direction: row;
+            gap: 8px;
+        }
+
+        &_item {
+            @include item($background: rgb(231, 227, 227), $color: rgba(0, 0, 0, 0.87), $height: 24px);
         }
     }
 }
