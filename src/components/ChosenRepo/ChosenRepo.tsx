@@ -1,4 +1,5 @@
 import { Nullable, RepositoryType } from "../../types/types";
+import star from '../../assets/starred.svg'
 import s from "./ChosenRepo.module.scss";
 
 type PropsType = {
@@ -6,7 +7,6 @@ type PropsType = {
 };
 
 export const ChosenRepo = ({ repo }: PropsType) => {
-  console.log(repo?.license);
 
   return (
     <div className={s.repo}>
@@ -18,18 +18,18 @@ export const ChosenRepo = ({ repo }: PropsType) => {
 
           <div className={s.repo__info}>
                 <div className={s.repo__info_main}>
-                    <div className={s.repo__info_lang}>{repo.language}</div>
-                    <div className={s.repo__info_stars}>{repo.size}</div>
+                    <div className={s.repo__info_lang}>{repo.language ? repo.language : 'Язык не указан'}</div>
+                    <div className={s.repo__info_stars}>
+                      <img src={star} />  
+                      <p>{repo.size}</p>
+                    </div>
                 </div>
                 <div className={s.repo__info_secondary}>
                     <div className={s.repo__info_item}>{repo.private ? 'private' : 'public'}</div>
                     <div className={s.repo__info_item}>forks: {repo.forks_count}</div>
                 </div>
 
-               {/*  <div>{repo.homepage}</div> */}
-
-
-                <div>{repo?.license?.name} license</div>
+                <div>{repo?.license ? `${repo.license.name} license`: 'Нет лицензии'}</div>
           </div>
         </div>
       )}

@@ -8,8 +8,8 @@
     background-color: $background;
     border-radius: 100px;
     min-width: 62px;
-    //max-width: 70px;
     min-height: $height;
+    padding: 0 8px;
 }
 
 .repo {
@@ -55,9 +55,16 @@
         }
 
         &_stars {
-            font-size: 14px;
-            font-weight: 400;
-            color: rgba(0, 0, 0, 0.87)
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            p {
+                font-size: 14px;
+                font-weight: 400;
+                color: rgba(0, 0, 0, 0.87)
+            }
+           
         }
 
         &_secondary {
