@@ -1,3 +1,10 @@
+export type Nullable<T> = T | null 
+
+export type ChosenRepoParamsType = {
+  ownerName: string
+  repoName: string
+}
+
 export type ReposResponseType = {
     total_count: number,
     incomplete_results: boolean,
