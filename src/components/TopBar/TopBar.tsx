@@ -1,7 +1,7 @@
 import { ChangeEvent } from "react";
 import Button from '@mui/material/Button';
-import { fetchRepos } from "../../redux/features/reposSlice";
-import { useAppDispatch } from "../../hooks/reduxHooks";
+import { fetchRepos, repos } from "../../redux/features/reposSlice";
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import s from "./TopBar.module.scss";
 
 type PropsType = {
@@ -12,8 +12,10 @@ type PropsType = {
 export const TopBar = ({title, onTitleChange}: PropsType) => {
   const dispatch = useAppDispatch()
 
+  const {order, sortParam} = useAppSelector(repos)
+
   const findRepos = () => {
-    dispatch(fetchRepos({name: title, order: "desc", sortParam: 'stars', page: 1, portion: 10}))
+    dispatch(fetchRepos({name: title, order, sortParam, page: 1, portion: 10}))
        
 }
 

@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
-import { fetchRepos, repos } from "../../redux/features/reposSlice";
+import { fetchRepos, repos, setOrder, setPage, setRowsPerPage, setSortParam } from "../../redux/features/reposSlice";
 import { convertData } from "../../utils/convertData";
 import TablePagination from "@mui/material/TablePagination";
 import { ChangeEvent, MouseEvent, useState } from "react";
@@ -17,18 +17,13 @@ type PropsType = {
   title: string;
 };
 
-type OrderType = "desc" | "asc";
-
-type SortParamType = "stars" | "forks" | "language" | "name" | "updatedAt";
 
 export const Main = ({ title }: PropsType) => {
   const dispatch = useAppDispatch();
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  //const [page, setPage] = useState(1);//0
   const [repoData, setRepoData] = useState<Nullable<RepositoryType>>(null); /// data for watching more info on repo
-  const { items, totalCount } = useAppSelector(repos);
-  const [sortParam, setSortParam] = useState<SortParamType>("stars");
-  const [order, setOrder] = useState<OrderType>("desc"); // desc and asc
+  const { items, totalCount, order, sortParam, rowsPerPage, page } = useAppSelector(repos);
+
 
   const onGetDataHandler = ({ repoName, ownerName }: ChosenRepoParamsType) => {
     api.getRepo({ repoName, ownerName }).then((res) => setRepoData(res.data));
@@ -38,7 +33,8 @@ export const Main = ({ title }: PropsType) => {
     _event: MouseEvent<HTMLButtonElement> | null,
     newPage: number
   ) => {
-    setPage(newPage);
+    //setPage(newPage);
+    dispatch(setPage(newPage));
     dispatch(
       fetchRepos({
         name: title,
@@ -53,7 +49,7 @@ export const Main = ({ title }: PropsType) => {
   const handleChangeRowsPerPage = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setRowsPerPage(parseInt(event.target.value));
+    dispatch(setRowsPerPage(parseInt(event.target.value)));
     dispatch(
       fetchRepos({
         name: title,
@@ -63,12 +59,12 @@ export const Main = ({ title }: PropsType) => {
         portion: +event.target.value,
       })
     );
-    setPage(0);
+    dispatch(setPage(1));//0
   };
 
   const onChangeOrder = () => {
     if (order === "asc") {
-      setOrder("desc");
+      dispatch(setOrder("desc"))
       dispatch(
         fetchRepos({
           name: title,
@@ -79,7 +75,7 @@ export const Main = ({ title }: PropsType) => {
         })
       );
     } else {
-      setOrder("asc");
+      dispatch(setOrder("asc"))
       dispatch(
         fetchRepos({
           name: title,
@@ -113,11 +109,11 @@ export const Main = ({ title }: PropsType) => {
                   onClick={onChangeOrder}
                   className={order === "asc" ? s.arrow : s.arrow__upsideDown}
                 />
-                <th onClick={() => setSortParam("name")}>Название </th>
-                <th onClick={() => setSortParam("language")}>Язык </th>
-                <th onClick={() => setSortParam("forks")}>Число форков</th>
-                <th onClick={() => setSortParam("stars")}>Число звезд</th>
-                <th onClick={() => setSortParam("updatedAt")}>
+                <th onClick={() => dispatch(setSortParam("name"))}>Название </th>
+                <th onClick={() => dispatch(setSortParam("language"))}>Язык </th>
+                <th onClick={() => dispatch(setSortParam("forks"))}>Число форков</th>
+                <th onClick={() => dispatch(setSortParam("stars"))}>Число звезд</th>
+                <th onClick={() => dispatch(setSortParam("updatedAt"))}>
                   Дата обновления
                 </th>
               </thead>
@@ -146,6 +142,7 @@ export const Main = ({ title }: PropsType) => {
             </table>
 
             <TablePagination
+            className={s.pagination}
               component="div"
               count={Math.round(totalCount / rowsPerPage)}
               page={page}
