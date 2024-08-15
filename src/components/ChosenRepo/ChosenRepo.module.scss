@@ -12,20 +12,36 @@
     padding: 0 8px;
 }
 
+@mixin h4Position {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 14px;
+    font-weight: 400;
+}
+
 .repo {
     position: relative;
-    height: 100;
     width: 30%;
     padding: 24px;
     background-color: #F2F2F2;
+    &__fixed {
+        position: fixed;
+        width: 30%;
+        padding: 24px;
+        background-color: #F2F2F2;
+        position: fixed;
+        top: 0;
+        right: 0;
+        height: 100vh;
+        h4 {
+            @include h4Position;
+        }
+    }
 
     h4 {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        font-size: 14px;
-        font-weight: 400;
+        @include h4Position;
     }
 
     &__content {

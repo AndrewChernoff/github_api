@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction, Slice } from '@reduxjs/toolkit'
 import { RootState } from '../store'
 import { api, ParamsType } from '../../api/api'
-import { RepositoryType, ReposResponseType } from '../../types/types'
+import { Nullable, RepositoryType, ReposResponseType } from '../../types/types'
 import { OrderType, RowsPerPageType, SortParamType } from './types';
 
 // Define a type for the slice state
@@ -11,10 +11,10 @@ export interface State {
     order: OrderType
     rowsPerPage: RowsPerPageType
     page: number
-    errorMessage: string | null
+    errorMessage: Nullable<string>
     status: 'idle' | 'pending' | 'error'
     totalCount: number
-    items: RepositoryType[] | null
+    items: Nullable<RepositoryType[]>
 }
 
 // Define the initial state using that type
@@ -55,6 +55,7 @@ export const reposSlice: Slice<State> = createSlice({
   extraReducers: builder => {
     builder
       .addCase(fetchRepos.pending, (state) => {
+        state.errorMessage = null
         state.status = 'pending'
       })
       .addCase(fetchRepos.fulfilled, (state, action: PayloadAction<ReposResponseType>) => {
@@ -62,6 +63,11 @@ export const reposSlice: Slice<State> = createSlice({
         state.totalCount = action.payload.total_count
         state.status = 'idle' 
       })
+      .addCase(fetchRepos.rejected, (state, action) => {
+        state.status = 'idle';
+        const errorMessage = action.payload ? (action.payload as { message?: string }).message : 'Something went wrong!';
+        state.errorMessage = errorMessage || 'Something went wrong!';
+      });
   }
 
 })
@@ -70,9 +76,15 @@ export const fetchRepos = createAsyncThunk<
   ReposResponseType,
   ParamsType
 // eslint-disable-next-line no-empty-pattern
->('repos/fetchRepos', async ({name, order, sortParam, page, portion}, {}) => {
+>('repos/fetchRepos', async ({name, order, sortParam, page, portion}, {rejectWithValue}) => {
   const res = await api.getRepos({name, order, sortParam, page, portion})
-  return res.data
+  
+  if(res.status === 200) {    
+    return res.data
+  } else {
+    return rejectWithValue(res.data.message);
+  }
+  
 })
 
 export const { setSortParam, setOrder, setRowsPerPage, setPage, setTitle } = reposSlice.actions

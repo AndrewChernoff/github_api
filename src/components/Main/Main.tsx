@@ -67,27 +67,31 @@ export const Main = () => {
       dispatch(
         fetchRepos({
           name: searchInputValue || ''/* title */,
-          order,
+          order: 'desc',
           sortParam,
           page: page,
           portion: rowsPerPage,
         })
       );
+      dispatch(setPage(0));//0
     } else {
       dispatch(setOrder("asc"))
       dispatch(
         fetchRepos({
           name: title,
-          order,
+          order: 'acs',
           sortParam,
           page: page,
           portion: rowsPerPage,
         })
       );
+      dispatch(setPage(0));//0
     }
   };
 
   const changeSortParam = (value: SortParamType) => dispatch(setSortParam(value))
+
+  const paramCN = (param: string) =>  sortParam ===param ? s.activeParam : ''
 
 
   if(items?.length === 0) {
@@ -96,6 +100,8 @@ export const Main = () => {
 
   return (
     <div className={s.main}>
+       
+
       {!items ? (
         <h1>Добро пожаловать</h1>
       ) : (
@@ -109,11 +115,11 @@ export const Main = () => {
                   onClick={onChangeOrder}
                   className={order === "asc" ? s.arrow : s.arrow__upsideDown}
                 />
-                <th onClick={() => changeSortParam("name")}>Название </th>
-                <th onClick={() => changeSortParam("language")}>Язык </th>
-                <th onClick={() => changeSortParam("forks")}>Число форков</th>
-                <th onClick={() => changeSortParam("stars")}>Число звезд</th>
-                <th onClick={() => changeSortParam("updatedAt")}>
+                <th onClick={() => changeSortParam("name")} className={paramCN("name")}>Название</th>
+                <th onClick={() => changeSortParam("language")} className={paramCN("language")}>Язык </th>
+                <th onClick={() => changeSortParam("forks")} className={paramCN("forks")}>Число форков</th>
+                <th onClick={() => changeSortParam("stars")} className={paramCN("stars")}>Число звезд</th>
+                <th onClick={() => changeSortParam("updatedAt")} className={paramCN("updatedAt")}>
                   Дата обновления
                 </th>
               </thead>
