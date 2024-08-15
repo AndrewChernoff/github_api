@@ -6,6 +6,7 @@ import { OrderType, RowsPerPageType, SortParamType } from './types';
 
 // Define a type for the slice state
 export interface State {
+    title: string;  
     sortParam: SortParamType;
     order: OrderType
     rowsPerPage: RowsPerPageType
@@ -18,10 +19,11 @@ export interface State {
 
 // Define the initial state using that type
 const initialState: State = {
-  sortParam: 'stars',
-  order: 'desc',
-  rowsPerPage: 10,
-  page: 1,
+    title: '',
+    sortParam: 'stars',
+    order: 'desc',
+    rowsPerPage: 10,
+    page: 0,
     errorMessage: null,
     status: 'idle',
     totalCount: 0,
@@ -39,10 +41,14 @@ export const reposSlice: Slice<State> = createSlice({
       state.order = action.payload
     },
     setRowsPerPage: (state, action: PayloadAction<RowsPerPageType>) => {
+      state.page = 1
       state.rowsPerPage = action.payload
     },
     setPage: (state, action: PayloadAction<number>) => {
       state.page = action.payload
+    },
+    setTitle: (state, action: PayloadAction<string>) => {
+      state.title = action.payload
     },
 
   },
@@ -69,7 +75,7 @@ export const fetchRepos = createAsyncThunk<
   return res.data
 })
 
-export const { setSortParam, setOrder, setRowsPerPage, setPage } = reposSlice.actions
+export const { setSortParam, setOrder, setRowsPerPage, setPage, setTitle } = reposSlice.actions
 
 export const repos = (state: RootState) => state.repos
 

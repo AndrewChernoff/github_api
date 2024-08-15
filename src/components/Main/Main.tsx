@@ -11,19 +11,19 @@ import {
 import { api } from "../../api/api";
 import { ChosenRepo } from "../ChosenRepo/ChosenRepo";
 import arrow from "../../assets/arrow.svg";
+import { SortParamType } from "../../redux/features/types";
 import s from "./Main.module.scss";
 
-type PropsType = {
-  title: string;
-};
 
-
-export const Main = ({ title }: PropsType) => {
+export const Main = () => {
   const dispatch = useAppDispatch();
-  //const [page, setPage] = useState(1);//0
   const [repoData, setRepoData] = useState<Nullable<RepositoryType>>(null); /// data for watching more info on repo
-  const { items, totalCount, order, sortParam, rowsPerPage, page } = useAppSelector(repos);
+  const { items, totalCount, order, sortParam, rowsPerPage, page, title } = useAppSelector(repos);
+  const searchInputValue = localStorage.getItem('search-input') ///made  for avoiding bug with searching
 
+
+  console.log(searchInputValue);
+  
 
   const onGetDataHandler = ({ repoName, ownerName }: ChosenRepoParamsType) => {
     api.getRepo({ repoName, ownerName }).then((res) => setRepoData(res.data));
@@ -33,7 +33,6 @@ export const Main = ({ title }: PropsType) => {
     _event: MouseEvent<HTMLButtonElement> | null,
     newPage: number
   ) => {
-    //setPage(newPage);
     dispatch(setPage(newPage));
     dispatch(
       fetchRepos({
@@ -52,7 +51,7 @@ export const Main = ({ title }: PropsType) => {
     dispatch(setRowsPerPage(parseInt(event.target.value)));
     dispatch(
       fetchRepos({
-        name: title,
+        name: searchInputValue || ''/* title */,
         order,
         sortParam,
         page: page,
@@ -67,7 +66,7 @@ export const Main = ({ title }: PropsType) => {
       dispatch(setOrder("desc"))
       dispatch(
         fetchRepos({
-          name: title,
+          name: searchInputValue || ''/* title */,
           order,
           sortParam,
           page: page,
@@ -88,6 +87,8 @@ export const Main = ({ title }: PropsType) => {
     }
   };
 
+  const changeSortParam = (value: SortParamType) => dispatch(setSortParam(value))
+
 
   if(items?.length === 0) {
     return <h1 className={s.notFound}>Не найдено</h1>
@@ -95,7 +96,6 @@ export const Main = ({ title }: PropsType) => {
 
   return (
     <div className={s.main}>
-      {/* {items?.length === 0 && <h1>Не найдено</h1>} */}
       {!items ? (
         <h1>Добро пожаловать</h1>
       ) : (
@@ -109,11 +109,11 @@ export const Main = ({ title }: PropsType) => {
                   onClick={onChangeOrder}
                   className={order === "asc" ? s.arrow : s.arrow__upsideDown}
                 />
-                <th onClick={() => dispatch(setSortParam("name"))}>Название </th>
-                <th onClick={() => dispatch(setSortParam("language"))}>Язык </th>
-                <th onClick={() => dispatch(setSortParam("forks"))}>Число форков</th>
-                <th onClick={() => dispatch(setSortParam("stars"))}>Число звезд</th>
-                <th onClick={() => dispatch(setSortParam("updatedAt"))}>
+                <th onClick={() => changeSortParam("name")}>Название </th>
+                <th onClick={() => changeSortParam("language")}>Язык </th>
+                <th onClick={() => changeSortParam("forks")}>Число форков</th>
+                <th onClick={() => changeSortParam("stars")}>Число звезд</th>
+                <th onClick={() => changeSortParam("updatedAt")}>
                   Дата обновления
                 </th>
               </thead>
