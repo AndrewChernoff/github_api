@@ -1,7 +1,7 @@
 import { Nullable, RepositoryType } from "../../types/types";
 import star from '../../assets/starred.svg'
-import s from "./ChosenRepo.module.scss";
 import { useEffect, useState } from "react";
+import s from "./ChosenRepo.module.scss";
 
 type PropsType = {
   repo: Nullable<RepositoryType>;
@@ -16,10 +16,8 @@ export const ChosenRepo = ({ repo }: PropsType) => {
   };
 
   useEffect(() => {
-    // Add event listener
     window.addEventListener('scroll', handleScroll);
 
-    // Cleanup function to remove the event listener
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };

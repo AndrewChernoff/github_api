@@ -4,7 +4,7 @@ import { api, ParamsType } from '../../api/api'
 import { Nullable, RepositoryType, ReposResponseType } from '../../types/types'
 import { OrderType, RowsPerPageType, SortParamType } from './types';
 
-// Define a type for the slice state
+
 export interface State {
     title: string;  
     sortParam: SortParamType;
@@ -17,7 +17,7 @@ export interface State {
     items: Nullable<RepositoryType[]>
 }
 
-// Define the initial state using that type
+
 const initialState: State = {
     title: '',
     sortParam: 'stars',
@@ -50,7 +50,9 @@ export const reposSlice: Slice<State> = createSlice({
     setTitle: (state, action: PayloadAction<string>) => {
       state.title = action.payload
     },
-
+    setErrorMessage: (state, action: PayloadAction<Nullable<string>>) => {
+      state.errorMessage = action.payload
+    }
   },
   extraReducers: builder => {
     builder
@@ -87,7 +89,7 @@ export const fetchRepos = createAsyncThunk<
   
 })
 
-export const { setSortParam, setOrder, setRowsPerPage, setPage, setTitle } = reposSlice.actions
+export const { setSortParam, setOrder, setRowsPerPage, setPage, setTitle, setErrorMessage } = reposSlice.actions
 
 export const repos = (state: RootState) => state.repos
 
